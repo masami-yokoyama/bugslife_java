@@ -23,7 +23,10 @@ public class ProductWithCategoryName {
 
 	private String categoryName;
 
-	public ProductWithCategoryName(Long id, String code, String name, Integer weight, Integer height, Integer price, String categoryName) {
+	private String description;
+
+	public ProductWithCategoryName(Long id, String code, String name, Integer weight, Integer height, Integer price,
+			String categoryName, String description) {
 		this.setId(id);
 		this.setCode(code);
 		this.setName(name);
@@ -31,5 +34,6 @@ public class ProductWithCategoryName {
 		this.setHeight(height);
 		this.setPrice(price);
 		this.setCategoryName(categoryName);
+		this.setDescription(description);
 	}
 }
