@@ -5,6 +5,10 @@
 
 .text-overflow {
   white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* テキストの省略記号 "..." を表示 */
 }
 
 /* 詳細 */
