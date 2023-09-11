@@ -35,7 +35,7 @@ $(document).ready(function () {
         console.log(name.length);
       }
 
-      // desplay_orderのバリデーション
+      // display_orderのバリデーション
       if (id === "display_order") {
         let displayOrder = $(this).val();
         if (displayOrder === "" || displayOrder < 0 || displayOrder > 999) {
