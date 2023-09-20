@@ -12,16 +12,16 @@
   <div id="action" data-th-var="action" data-th-val="${action}"></div>
   <div class="form-group">
     <label for="name">カテゴリー名: </label>
-    <span th:text="${category.name}"></span>
+    <span id="name" th:text="${category.name}"></span>
   </div>
   <div class="form-group">
     <label for="description">説明: </label>
-    <span th:text="${category.description}"></span>
+    <span id="description" th:text="${category.description}"></span>
   </div>
   <hr />
   <div class="form-group">
     <label for="products">紐付商品一覧: </label>
-    <div class="d-inline" th:each="product : ${products}">
+    <div id="products" class="d-inline" th:each="product : ${products}">
       <input class="form-check-input" type="checkbox" th:id="'checkbox-' + ${product.id}" th:value="${product.id}" />
       <label class="form-check-label" th:for="'checkbox-' + ${product.id}" th:text="${product.name}"></label>
     </div>
