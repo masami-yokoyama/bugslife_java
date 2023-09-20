@@ -3,12 +3,12 @@ $(document).ready(function () {
   let action = document.getElementById("action").getAttribute("val");
 
   $.ajax({
-    url: "/api/category/" + categoryId,
+    url: "/api/categories/" + categoryId,
     type: "GET",
     dataType: "json",
   })
     .done(function (data) {
-      var categoryProducts = data;
+      var categoryProducts = data.categoryProducts;
       // チェックボックスにチェックを入れる処理
       categoryProducts.forEach(function (categoryProduct) {
         $("#checkbox-" + categoryProduct.productId).prop("checked", true);
@@ -27,24 +27,26 @@ $(document).ready(function () {
       .get();
 
     // 作成更新時に紐付けが存在しない場合はスキップ
-    if (action == "true") {
-      if (!validation(checkedIds)) {
+    if (action == "true" && !validation(checkedIds)) {
         return false;
       }
-    }
 
     let postData = {
       productIds: checkedIds,
     };
+    let postDataJson = JSON.stringify(postData);
 
     $.ajax({
       url: "/api/categories/" + categoryId + "/updateCategoryProduct",
       type: "POST",
       dataType: "text",
       contentType: "application/json",
-      data: postData,
-    }).done(function (data) {
-      $("#success-message").text(data).show().fadeOut(3000);
+      data: postDataJson,
+    }).done(function (response) {
+      $("#success-message").text(response).show().fadeOut(3000);
+    })
+    .fail(function (xhr) {
+      $("#error-message").text(xhr.responseText).show().fadeOut(3000);
     });
   });
 
