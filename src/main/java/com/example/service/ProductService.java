@@ -40,7 +40,6 @@ public class ProductService {
 	@Autowired
 	private CategoryProductRepository categoryProductRepository;
 
-
 	public List<Product> findAll() {
 		return productRepository.findAll();
 	}
@@ -74,14 +73,13 @@ public class ProductService {
 		Join<CategoryProduct, Category> categoryJoin = categoryProductJoin.join("category", JoinType.LEFT);
 
 		query.multiselect(
-			root.get("id"),
-			root.get("code"),
-			root.get("name"),
-			root.get("weight"),
-			root.get("height"),
-			root.get("price"),
-			categoryJoin.get("name").alias("categoryName")
-		);
+				root.get("id"),
+				root.get("code"),
+				root.get("name"),
+				root.get("weight"),
+				root.get("height"),
+				root.get("price"),
+				categoryJoin.get("name").alias("categoryName"));
 
 		List<Predicate> predicates = new ArrayList<>();
 
@@ -125,18 +123,35 @@ public class ProductService {
 
 		query.where(builder.and(predicates.toArray(new Predicate[0])));
 
-		return entityManager.createQuery(query).getResultList();
+		List<ProductWithCategoryName> initialResults = entityManager.createQuery(query).getResultList();
+		List<ProductWithCategoryName> filteredResults = new ArrayList<>();
+
+		if (form.getCategories() != null && form.getCategories().size() > 0) {
+			for (ProductWithCategoryName product : initialResults) {
+				// 追加の条件をここでチェックし、条件に合うものだけを結果に追加
+				if (containsAllCategories(product.getId(), form.getCategories())) {
+					filteredResults.add(product);
+				}
+			}
+		} else {
+			filteredResults = initialResults;
+		}
+
+		return filteredResults;
 	}
 
 	/**
 	 * ProductFormの内容を元に商品情報を保存する
+	 *
 	 * @param entity
 	 * @return
 	 */
 	@Transactional(readOnly = false)
 	public Product save(ProductForm entity) {
 		// 紐づくカテゴリを事前に取得
-		List<CategoryProduct> categoryProducts = entity.getId() != null ? categoryProductRepository.findByProductId(entity.getId()) : new ArrayList<>();
+		List<CategoryProduct> categoryProducts = entity.getId() != null
+				? categoryProductRepository.findByProductId(entity.getId())
+				: new ArrayList<>();
 
 		Product product = new Product(entity);
 		productRepository.save(product);
@@ -158,5 +173,25 @@ public class ProductService {
 		}
 
 		return product;
+	}
+
+	private boolean containsAllCategories(Long productId, List<Long> selectedCategories) {
+		// 商品IDと選択したカテゴリIDのペアが中間テーブルに存在するかをクエリで検証
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> query = builder.createQuery(Long.class);
+		Root<CategoryProduct> categoryProductRoot = query.from(CategoryProduct.class);
+
+		query.select(builder.count(categoryProductRoot.get("id")));
+
+		List<Predicate> predicates = new ArrayList<>();
+		predicates.add(builder.equal(categoryProductRoot.get("productId"), productId));
+		predicates.add(categoryProductRoot.get("categoryId").in(selectedCategories));
+
+		query.where(predicates.toArray(new Predicate[0]));
+
+		Long count = entityManager.createQuery(query).getSingleResult();
+
+		// 選択したカテゴリIDの数と一致すれば、すべてのカテゴリIDを含んでいる
+		return count.equals((long)selectedCategories.size());
 	}
 }
