@@ -100,10 +100,14 @@ public class CompanyController {
 	 * @return
 	 */
 	@PostMapping
-	public String create(@ModelAttribute Company entity, BindingResult result,
+	public String create(Model model, @Validated @ModelAttribute Company entity, BindingResult result,
 			RedirectAttributes redirectAttributes) {
 		Company company = null;
 		try {
+			if (result.hasErrors()) {
+				model.addAttribute("company", entity);
+				return "company/form";
+			}
 			company = companyService.save(entity);
 			redirectAttributes.addFlashAttribute("success", Message.MSG_SUCESS_INSERT);
 			return "redirect:/companies/" + company.getId();
@@ -160,7 +164,7 @@ public class CompanyController {
 	/**
 	 * 取引先情報の削除処理
 	 *
-	 * @param id 取引先ID
+	 * @param id                 取引先ID
 	 * @param redirectAttributes リダイレクト先に値を渡す
 	 * @return
 	 */
