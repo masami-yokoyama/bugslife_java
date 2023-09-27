@@ -57,6 +57,10 @@ public class UnusedCampaignCodeValidator implements ConstraintValidator<UnusedCa
 		if (campaign == null) {
 			return true;
 		}
+		if (id != null && id.equals(campaign.getId())) {
+			return true;
+		}
+
 		context.disableDefaultConstraintViolation();
 		context.buildConstraintViolationWithTemplate(message).addPropertyNode(fields[1])
 				.addConstraintViolation();
