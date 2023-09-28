@@ -131,8 +131,8 @@ public class CampaignService {
 				campaign.setStatus(nexStatus);
 				campaignRepository.save(campaign);
 			});
-		} catch (RuntimeException e) {
-			throw new Exception(e.getMessage());
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
