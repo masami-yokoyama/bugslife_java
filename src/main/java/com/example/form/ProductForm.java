@@ -9,6 +9,7 @@ import com.example.model.CategoryProduct;
 import com.example.model.Product;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -44,7 +45,8 @@ public class ProductForm {
 	private Integer height;
 
 	@NotNull(message = "値段を入力してください。")
-	private Integer price;
+	@DecimalMin(value = "0")
+	private Double price;
 
 	@NotNull(message = "税率を選択してください。")
 	private Integer rate = TaxType.RATE_10;
@@ -55,7 +57,6 @@ public class ProductForm {
 	@NotNull(message = "端数処理を選択してください。")
 	private String rounding = TaxType.ROUND;
 
-
 	public ProductForm(Product product) {
 		this.setId(product.getId());
 		this.setShopId(product.getShopId());
@@ -64,7 +65,8 @@ public class ProductForm {
 		// 紐づくカテゴリIDのリストを作成
 		List<CategoryProduct> categoryProducts = product.getCategoryProducts();
 		if (categoryProducts != null) {
-			List<Long> categoryIds = categoryProducts.stream().map(categoryProduct -> categoryProduct.getCategoryId()).collect(Collectors.toList());
+			List<Long> categoryIds = categoryProducts.stream().map(categoryProduct -> categoryProduct.getCategoryId())
+					.collect(Collectors.toList());
 			this.setCategoryIds(categoryIds);
 		}
 		this.setWeight(product.getWeight());
