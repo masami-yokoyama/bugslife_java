@@ -35,7 +35,7 @@ public class Product extends TimeEntity implements Serializable {
 	@Column(name = "shop_id", nullable = false)
 	private Long shopId;
 
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", columnDefinition = "VARCHAR(255) COLLATE utf8_general_ci", nullable = false)
 	private String name;
 
 	@Column(name = "code", nullable = false)
