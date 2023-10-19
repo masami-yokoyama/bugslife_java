@@ -79,7 +79,7 @@ public class ProductService {
 				root.get("weight"),
 				root.get("height"),
 				root.get("price"),
-				categoryJoin.get("name").alias("categoryName"));
+				builder.max(categoryJoin.get("name")).alias("categoryName"));
 
 		List<Predicate> predicates = new ArrayList<>();
 
@@ -122,6 +122,7 @@ public class ProductService {
 		}
 
 		query.where(builder.and(predicates.toArray(new Predicate[0])));
+		query.groupBy(root.get("id"));
 
 		List<ProductWithCategoryName> initialResults = entityManager.createQuery(query).getResultList();
 		List<ProductWithCategoryName> filteredResults = new ArrayList<>();
