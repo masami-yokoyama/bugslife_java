@@ -110,7 +110,7 @@ public class CompanyController {
 			}
 			company = companyService.save(entity);
 			redirectAttributes.addFlashAttribute("success", Message.MSG_SUCESS_INSERT);
-			return "redirect:/companies/" + company.getId();
+			return "redirect:/companies";
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("error", Message.MSG_ERROR);
 			e.printStackTrace();
@@ -153,7 +153,7 @@ public class CompanyController {
 		try {
 			company = companyService.save(entity);
 			redirectAttributes.addFlashAttribute("success", Message.MSG_SUCESS_UPDATE);
-			return "redirect:/companies/" + company.getId();
+			return "redirect:/companies";
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("error", Message.MSG_ERROR);
 			e.printStackTrace();
