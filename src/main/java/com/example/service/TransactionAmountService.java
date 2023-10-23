@@ -72,7 +72,7 @@ public class TransactionAmountService {
 			return false;
 		}
 		// 金額が0以上か
-		if (entity.getPrice() <= 0) {
+		if (entity.getPrice() < 0) {
 			return false;
 		}
 		// 金額が10億円以下か
@@ -124,6 +124,11 @@ public class TransactionAmountService {
 	public Integer getRatioTransactionalAmounts(Company company) {
 		// 現在の取得を行う
 		List<TransactionAmount> tAmountList = this.findByCompany(company);
+
+		if (tAmountList.isEmpty()) {
+			// 取引金額がない場合、収支比率はゼロとして返す
+			return 0;
+		}
 
 		// 収入と支出の比率を計算する
 		Integer incomSum = 0;
