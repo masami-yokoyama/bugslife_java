@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}">
+<th:block layout:fragment="content">
+  <h1>Show taxType</h1>
+  <hr />
+  <div class="form-group">
+    <label for="id">ID: </label>
+    <span th:text="${taxType.id}"></span>
+  </div>
+  <div class="form-group">
+    <label for="rate">Rate: </label>
+    <span th:text="${taxType.rate}"></span>
+  </div>
+  <div class="form-group">
+    <label for="taxIncluded">tax included: </label>
+    <span th:text="${taxType.taxIncluded}"></span>
+  </div>
+  <div class="form-group">
+    <label for="rounding">Rounding: </label>
+    <span th:text="${taxType.rounding}"></span>
+  </div>
+
+  <a class="btn btn-link" th:href="@{/taxTypes/{id}/edit(id = ${taxType.id})}">編集</a>
+  <br />
+  <form th:action="@{/taxTypes/{id}(id = ${taxType.id})}" th:method="delete">
+    <button class="btn btn-link" type="submit">削除</button>
+  </form>
+  <a class="btn btn-link" th:href="@{/taxTypes}">一覧</a>
+  <br />
+</th:block>
+
+</html>
